@@ -35,7 +35,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private boolean mFromSavedInstanceState;
     private int mCurrentSelectedPosition;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,12 +45,15 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mDrawerList.setLayoutManager(layoutManager);
         mDrawerList.setHasFixedSize(true);
 
-        final List<NavigationItem> navigationItems = getMenu();
+        return view;
+    }
+
+    @Nullable
+    public void bindMenuData(int currentIndex){
+        final List<NavigationItem> navigationItems = getMenu(currentIndex);
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(navigationItems);
         adapter.setNavigationDrawerCallbacks(this);
         mDrawerList.setAdapter(adapter);
-        //selectItem(mCurrentSelectedPosition);
-        return view;
     }
 
     @Override
@@ -136,11 +138,19 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mCallbacks = null;
     }
 
-    public List<NavigationItem> getMenu() {
+    public List<NavigationItem> getMenu(int currentIndex) {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
         items.add(new NavigationItem("item 1", getResources().getDrawable(R.drawable.ic_menu_check)));
         items.add(new NavigationItem("item 2", getResources().getDrawable(R.drawable.ic_menu_check)));
         items.add(new NavigationItem("item 3", getResources().getDrawable(R.drawable.ic_menu_check)));
+
+        //Setting "isCurrent" property for navigation item
+        if(currentIndex>=0) {
+            NavigationItem currentNav = items.get(currentIndex);
+            currentNav.setIsCurrent(true);
+            items.set(currentIndex, currentNav);
+        }
+
         return items;
     }
 
@@ -195,4 +205,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
         return sharedPref.getString(settingName, defaultValue);
     }
+
+
 }

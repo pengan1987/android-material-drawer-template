@@ -8,10 +8,18 @@ import android.graphics.drawable.Drawable;
 public class NavigationItem {
     private String mText;
     private Drawable mDrawable;
+    private boolean mIsCurrent = false;
 
     public NavigationItem(String text, Drawable drawable) {
         mText = text;
         mDrawable = drawable;
+    }
+    public boolean getIsCurrent() {
+        return mIsCurrent;
+    }
+
+    public void setIsCurrent(boolean isCurrent) {
+        mIsCurrent = isCurrent;
     }
 
     public String getText() {

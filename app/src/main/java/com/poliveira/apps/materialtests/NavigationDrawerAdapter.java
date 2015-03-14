@@ -42,39 +42,41 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     public void onBindViewHolder(NavigationDrawerAdapter.ViewHolder viewHolder, final int i) {
         viewHolder.textView.setText(mData.get(i).getText());
         viewHolder.textView.setCompoundDrawablesWithIntrinsicBounds(mData.get(i).getDrawable(), null, null, null);
+        boolean currentView = mData.get(i).getIsCurrent();
+        if (!currentView) {
+            viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                                                       @Override
+                                                       public boolean onTouch(View v, MotionEvent event) {
 
-        viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
-                                                   @Override
-                                                   public boolean onTouch(View v, MotionEvent event) {
-
-                                                       switch (event.getAction()) {
-                                                           case MotionEvent.ACTION_DOWN:
-                                                               touchPosition(i);
-                                                               return false;
-                                                           case MotionEvent.ACTION_CANCEL:
-                                                               touchPosition(-1);
-                                                               return false;
-                                                           case MotionEvent.ACTION_MOVE:
-                                                               return false;
-                                                           case MotionEvent.ACTION_UP:
-                                                               touchPosition(-1);
-                                                               return false;
+                                                           switch (event.getAction()) {
+                                                               case MotionEvent.ACTION_DOWN:
+                                                                   touchPosition(i);
+                                                                   return false;
+                                                               case MotionEvent.ACTION_CANCEL:
+                                                                   touchPosition(-1);
+                                                                   return false;
+                                                               case MotionEvent.ACTION_MOVE:
+                                                                   return false;
+                                                               case MotionEvent.ACTION_UP:
+                                                                   touchPosition(-1);
+                                                                   return false;
+                                                           }
+                                                           return true;
                                                        }
-                                                       return true;
                                                    }
-                                               }
-        );
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       if (mNavigationDrawerCallbacks != null)
-                                                           mNavigationDrawerCallbacks.onNavigationDrawerItemSelected(i);
+            );
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                       @Override
+                                                       public void onClick(View v) {
+                                                           if (mNavigationDrawerCallbacks != null)
+                                                               mNavigationDrawerCallbacks.onNavigationDrawerItemSelected(i);
+                                                       }
                                                    }
-                                               }
-        );
+            );
+        }
 
         //TODO: selected menu position, change layout accordingly
-        if (mTouchedPosition == i) {
+        if (mTouchedPosition == i || currentView) {
             viewHolder.itemView.setBackgroundColor(viewHolder.itemView.getContext().getResources().getColor(R.color.selected_gray));
         } else {
             viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
